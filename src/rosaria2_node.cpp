@@ -82,8 +82,8 @@ RosAria2Node::RosAria2Node(const std::string& name) :
         motors_state_pub = this->create_publisher< std_msgs::msg::Bool >("motors_state", rclcpp::QoS(5).best_effort().transient_local());
 
         // advertise enable/disable services
-        enable_srv = this->create_service< std_srvs::srv::Empty >("enable_motors", std::bind(&RosAria2Node::enable_motors_cb, this, _1, _2), 10);
-        disable_srv = this->create_service< std_srvs::srv::Empty >("disable_motors", std::bind(&RosAria2Node::disable_motors_cb, this, _1, _2), 10);
+        enable_srv = this->create_service< std_srvs::srv::Empty >("enable_motors", std::bind(&RosAria2Node::enable_motors_cb, this, _1, _2));
+        disable_srv = this->create_service< std_srvs::srv::Empty >("disable_motors", std::bind(&RosAria2Node::disable_motors_cb, this, _1, _2));
 
         // initialize transform broadcaster
         odom_broadcaster = std::make_unique< tf2_ros::TransformBroadcaster >(*this);
@@ -226,7 +226,7 @@ int RosAria2Node::setup() {
     if (cmdvel_timeout_param > 0.0) {
         // @todo expose timer frequency as a parameter?
         // @todo check if wall timer vs timer for watchdog
-        cmdvel_watchdog_timer = this->create_timer(100ms /* no need to wrap around a Duration instance*/, std::bind(&RosAria2Node::cmdvel_watchdog, this));
+        cmdvel_watchdog_timer = this->create_wall_timer(100ms /* no need to wrap around a Duration instance*/, std::bind(&RosAria2Node::cmdvel_watchdog, this));
     }
 
     RCLCPP_INFO(this->get_logger(), "Setup complete");
