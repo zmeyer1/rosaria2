@@ -263,10 +263,17 @@ class RosAria2Node : public rclcpp::Node {
     std::unique_ptr< tf2_ros::TransformBroadcaster > odom_broadcaster;
     geometry_msgs::msg::TransformStamped odom_trans;
 
-    std::string frame_id_odom;
-    std::string frame_id_base_link;
-    std::string frame_id_bumper;
-    std::string frame_id_sonar;
+    // std::string frame_id_odom;
+    // std::string frame_id_base_link;
+    // std::string frame_id_bumper;
+    // std::string frame_id_sonar;
+
+    // set up dynamic parameters for each frame
+
+    rclcpp::DynamicParameter< std::string > frame_id_odom; 
+    rclcpp::DynamicParameter< std::string > frame_id_base_link; 
+    rclcpp::DynamicParameter< std::string > frame_id_bumper; 
+    rclcpp::DynamicParameter< std::string > frame_id_sonar; 
 
     //--------------------------------------------------------------------------
     /// @brief      Callback for the 'enable_motors' ROS2 service.

@@ -41,8 +41,12 @@ using namespace std::placeholders;     // for _1, _2
 
 RosAria2Node::Parameters::Parameters(rclcpp::Node* node) :
     _param_subscriber(std::make_shared< rclcpp::ParameterEventHandler >(node)),
-    serial_port(node, "seria_port", "/dev/ttyUSB0"),
+    serial_port(node, "serial_port", "/dev/ttyUSB0"),
     serial_baud(node, "serial_baud", 9600),
+    frame_id_odom(node, "frame_id_odom", "odom"),
+    frame_id_base_link(node, "frame_id_base_link", "base_link"),
+    frame_id_bumper(node, "frame_id_bumper", "bumper"),
+    frame_id_sonar(node, "frame_id_sonar", "sonar"),
     sonar_enabled(node, "sonar_enabled", false),
     publish_sonar(node, "publish_sonar", false),
     publish_sonar_pointcloud2(node, "publish_sonar_pointcloud2", false),
@@ -287,8 +291,8 @@ void RosAria2Node::publish() {
     position.twist.twist.linear.x = robot->getVel() / 1000.0; //Aria returns velocity in mm/s.
     position.twist.twist.linear.y = robot->getLatVel() / 1000.0;
     position.twist.twist.angular.z = robot->getRotVel() * M_PI / 180;
-    position.header.frame_id = frame_id_odom;
-    position.child_frame_id = frame_id_base_link;
+    position.header.frame_id = frame_id_odom.get().c_str();
+    position.child_frame_id = frame_id_base_link.get().c_str;
     position.header.stamp = this->now();
     pose_pub->publish(position);
     RCLCPP_DEBUG(this->get_logger(), "publish (time %f) pose x: %f, pose y: %f, pose angle: %f; linear vel x: %f, vel y: %f; angular vel z: %f",
@@ -304,8 +308,8 @@ void RosAria2Node::publish() {
     // -----------------------------------------------------
     // publish base transform (odom->base_link)
     odom_trans.header.stamp = this->now();
-    odom_trans.header.frame_id = frame_id_odom;
-    odom_trans.child_frame_id = frame_id_base_link;
+    odom_trans.header.frame_id = frame_id_odom.get().c_str();
+    odom_trans.child_frame_id = frame_id_base_link.get().c_str();
     odom_trans.transform.translation.x = pose.getX() / 1000.0;
     odom_trans.transform.translation.y = pose.getY() / 1000.0;
     odom_trans.transform.translation.z = 0.0;
@@ -319,7 +323,7 @@ void RosAria2Node::publish() {
     unsigned char front_bumpers = (unsigned char)(stall >> 8);
     unsigned char rear_bumpers = (unsigned char)(stall);
 
-    bumpers.header.frame_id = frame_id_bumper;
+    bumpers.header.frame_id = frame_id_bumper.get().c_str();
     bumpers.header.stamp = this->now();
 
     std::stringstream bumper_info(std::stringstream::out);
@@ -379,7 +383,7 @@ void RosAria2Node::publish() {
         sensor_msgs::msg::PointCloud cloud;  //sonar readings.
         cloud.header.stamp = position.header.stamp; //copy time.
         // sonar sensors relative to base_link
-        cloud.header.frame_id = frame_id_sonar;
+        cloud.header.frame_id = frame_id_sonar.get().c_str();
 
         std::stringstream sonar_debug_info; // Log debugging info
         sonar_debug_info << "Sonar readings: ";
