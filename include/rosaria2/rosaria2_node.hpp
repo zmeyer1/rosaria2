@@ -121,7 +121,7 @@ class RosAria2Node : public rclcpp::Node {
 
         // set up dynamic parameters for each frame
 
-        rclcpp::DynamicParameter< std::string > frame_prefix; 
+        rclcpp::DynamicParameter< std::string > frame_id_prefix; 
         rclcpp::DynamicParameter< std::string > frame_id_odom; 
         rclcpp::DynamicParameter< std::string > frame_id_base_link; 
         rclcpp::DynamicParameter< std::string > frame_id_bumper; 
