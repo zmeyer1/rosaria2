@@ -118,6 +118,14 @@ class RosAria2Node : public rclcpp::Node {
         rclcpp::DynamicParameter< int > drift_factor;
         rclcpp::DynamicParameter< int > rev_count;     //If ticks_mm or rev_count are <0, don't use. If drift_factor is -99999, don't use (drift_factor could be 0 or negative).
 
+
+        // set up dynamic parameters for each frame
+
+        rclcpp::DynamicParameter< std::string > frame_id_odom; 
+        rclcpp::DynamicParameter< std::string > frame_id_base_link; 
+        rclcpp::DynamicParameter< std::string > frame_id_bumper; 
+        rclcpp::DynamicParameter< std::string > frame_id_sonar; 
+
         // // force an update from ROS Parameter server
         // static Ptr update(const rclcpp::Node& node);
 
@@ -268,12 +276,6 @@ class RosAria2Node : public rclcpp::Node {
     // std::string frame_id_bumper;
     // std::string frame_id_sonar;
 
-    // set up dynamic parameters for each frame
-
-    rclcpp::DynamicParameter< std::string > frame_id_odom; 
-    rclcpp::DynamicParameter< std::string > frame_id_base_link; 
-    rclcpp::DynamicParameter< std::string > frame_id_bumper; 
-    rclcpp::DynamicParameter< std::string > frame_id_sonar; 
 
     //--------------------------------------------------------------------------
     /// @brief      Callback for the 'enable_motors' ROS2 service.
