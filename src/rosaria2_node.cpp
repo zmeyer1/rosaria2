@@ -292,7 +292,7 @@ void RosAria2Node::publish() {
     position.twist.twist.linear.y = robot->getLatVel() / 1000.0;
     position.twist.twist.angular.z = robot->getRotVel() * M_PI / 180;
     position.header.frame_id = frame_id_odom.get().c_str();
-    position.child_frame_id = frame_id_base_link.get().c_str;
+    position.child_frame_id = frame_id_base_link.get().c_str();
     position.header.stamp = this->now();
     pose_pub->publish(position);
     RCLCPP_DEBUG(this->get_logger(), "publish (time %f) pose x: %f, pose y: %f, pose angle: %f; linear vel x: %f, vel y: %f; angular vel z: %f",
