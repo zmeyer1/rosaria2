@@ -42,7 +42,7 @@ using namespace std::placeholders;     // for _1, _2
 RosAria2Node::Parameters::Parameters(rclcpp::Node* node) :
     _param_subscriber(std::make_shared< rclcpp::ParameterEventHandler >(node)),
     serial_port(node, "serial_port", "/dev/ttyUSB0"),
-    serial_baud(node, "serial_baud", 9600)
+    serial_baud(node, "serial_baud", 9600),
     frame_id_prefix(node, "frame_id_prefix", ""),
     frame_id_odom(node, "frame_id_odom", "odom"),
     frame_id_base_link(node, "frame_id_base_link", "base_link"),
