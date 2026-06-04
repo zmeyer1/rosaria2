@@ -292,8 +292,8 @@ void RosAria2Node::publish() {
     position.twist.twist.linear.x = robot->getVel() / 1000.0; //Aria returns velocity in mm/s.
     position.twist.twist.linear.y = robot->getLatVel() / 1000.0;
     position.twist.twist.angular.z = robot->getRotVel() * M_PI / 180;
-    position.header.frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_odom.get().c_str();
-    position.child_frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_base_link.get().c_str();
+    position.header.frame_id = (config->frame_id_prefix.get() + config->frame_id_odom.get()).c_str();
+    position.child_frame_id = (config->frame_id_prefix.get() + config->frame_id_base_link.get()).c_str();
     position.header.stamp = this->now();
     pose_pub->publish(position);
     RCLCPP_DEBUG(this->get_logger(), "publish (time %f) pose x: %f, pose y: %f, pose angle: %f; linear vel x: %f, vel y: %f; angular vel z: %f",
@@ -309,8 +309,8 @@ void RosAria2Node::publish() {
     // -----------------------------------------------------
     // publish base transform (odom->base_link)
     odom_trans.header.stamp = this->now();
-    odom_trans.header.frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_odom.get().c_str();
-    odom_trans.child_frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_base_link.get().c_str();
+    odom_trans.header.frame_id = (config->frame_id_prefix.get() + config->frame_id_odom.get()).c_str();
+    odom_trans.child_frame_id = (config->frame_id_prefix.get() + config->frame_id_base_link.get()).c_str();
     odom_trans.transform.translation.x = pose.getX() / 1000.0;
     odom_trans.transform.translation.y = pose.getY() / 1000.0;
     odom_trans.transform.translation.z = 0.0;
@@ -324,7 +324,7 @@ void RosAria2Node::publish() {
     unsigned char front_bumpers = (unsigned char)(stall >> 8);
     unsigned char rear_bumpers = (unsigned char)(stall);
 
-    bumpers.header.frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_bumper.get().c_str();
+    bumpers.header.frame_id = (config->frame_id_prefix.get() + config->frame_id_bumper.get()).c_str();
     bumpers.header.stamp = this->now();
 
     std::stringstream bumper_info(std::stringstream::out);
@@ -384,7 +384,7 @@ void RosAria2Node::publish() {
         sensor_msgs::msg::PointCloud cloud;  //sonar readings.
         cloud.header.stamp = position.header.stamp; //copy time.
         // sonar sensors relative to base_link
-        cloud.header.frame_id = config->frame_id_prefix.get().c_str() + config->frame_id_sonar.get().c_str();
+        cloud.header.frame_id = (config->frame_id_prefix.get() + config->frame_id_sonar.get()).c_str();
 
         std::stringstream sonar_debug_info; // Log debugging info
         sonar_debug_info << "Sonar readings: ";
